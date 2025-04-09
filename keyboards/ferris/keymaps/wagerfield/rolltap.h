@@ -14,40 +14,32 @@
 
 // Bit Positions
 
-#define MRT_KEYCODE_BITS  0 // Bits 00-07: Basic keycode (8 bits)
+#define MRT_KEYCODE_BITS  0 // Bits 00-07: Basic Keycode (8 bits)
 #define MRT_MODIFIER_BITS 8 // Bits 08-11: Modifiers (4 bits)
-#define MRT_SHIFTED_BITS 12 // Bit     12: Shifted state (1 bit)
-#define MRT_ALTERED_BITS 13 // Bit     13: Altered state (1 bit)
+#define MRT_STATE_BITS   12 // Bits 12-13: State (2 bits)
 
 // Bit Masks
 
 #define MRT_KEYCODE_MASK  0x00FF // 0000 0000 1111 1111
 #define MRT_MODIFIER_MASK 0x0F00 // 0000 1111 0000 0000
-#define MRT_SHIFTED_MASK  0x1000 // 0001 0000 0000 0000
-#define MRT_ALTERED_MASK  0x2000 // 0010 0000 0000 0000
+#define MRT_STATE_MASK    0x3000 // 0011 0000 0000 0000
 #define MRT_MAGIC_MASK    0xC000 // 1100 0000 0000 0000
 #define MRT_MAGIC_VALUE   0x8000 // 1000 0000 0000 0000 (QMK user space)
 
-// Helper Macros
+// State Macro
 
-#define IS_SHIFTED_KEYCODE(keycode) (                         \
-    ((keycode) >= QK_LSFT && (keycode) <= (QK_LSFT + 255)) || \
-    ((keycode) >= QK_RSFT && (keycode) <= (QK_RSFT + 255))    \
-)
-
-#define IS_ALTERED_KEYCODE(keycode) (                         \
-    ((keycode) >= QK_LALT && (keycode) <= (QK_LALT + 255)) || \
-    ((keycode) >= QK_RALT && (keycode) <= (QK_RALT + 255))    \
+#define MRT_EXTRACT_STATE(keycode) ( \
+    ((QK_MODS_GET_MODS(keycode) & MOD_LSFT) ? 0x1 : 0) | \
+    ((QK_MODS_GET_MODS(keycode) & MOD_LALT) ? 0x2 : 0) \
 )
 
 // Mod Roll Tap Macro
 
 #define MRT(modifier, keycode) (uint16_t) ( \
-    (QK_MODS_GET_BASIC_KEYCODE(keycode) << MRT_KEYCODE_BITS)    | /* bits 00-07: basic keycode */ \
-    (IS_SHIFTED_KEYCODE(keycode) ? (1 << MRT_SHIFTED_BITS) : 0) | /* bit     12: shifted state */ \
-    (IS_ALTERED_KEYCODE(keycode) ? (1 << MRT_ALTERED_BITS) : 0) | /* bit     13: altered state */ \
-    ((modifier) << MRT_MODIFIER_BITS)                           | /* bits 08-11: modifiers     */ \
-    MRT_MAGIC_VALUE                                               /* bits 14-15: magic value   */ \
+    (QK_MODS_GET_BASIC_KEYCODE(keycode) << MRT_KEYCODE_BITS) | /* bits 00-07: basic keycode */ \
+    (MRT_EXTRACT_STATE(keycode) << MRT_STATE_BITS)               | /* bits 12-13: state         */ \
+    ((modifier) << MRT_MODIFIER_BITS)                            | /* bits 08-11: modifiers     */ \
+    MRT_MAGIC_VALUE                                            /* bits 14-15: magic value   */ \
 )
 
 // Modifier Macros
@@ -67,14 +59,26 @@
 // Decoder Macros
 
 #define IS_MRT(keycode) (((keycode) & MRT_MAGIC_MASK) == MRT_MAGIC_VALUE)
+
 #define MRT_GET_KEYCODE(keycode) (((keycode) & MRT_KEYCODE_MASK) >> MRT_KEYCODE_BITS)
-#define MRT_GET_SHIFTED(keycode) (((keycode) & MRT_SHIFTED_MASK) >> MRT_SHIFTED_BITS)
-#define MRT_GET_ALTERED(keycode) (((keycode) & MRT_ALTERED_MASK) >> MRT_ALTERED_BITS)
-#define MRT_GET_MODIFIER(keycode) (((keycode) & MRT_MODIFIER_MASK) >> MRT_MODIFIER_BITS)
+#define MRT_GET_STATE(keycode) ((((keycode) & MRT_STATE_MASK) >> MRT_STATE_BITS) << 1)
+#define MRT_GET_MODS(keycode) (((keycode) & MRT_MODIFIER_MASK) >> MRT_MODIFIER_BITS)
 
 // Function Declarations
 
 bool process_rolltap(uint16_t keycode, keyrecord_t *record);
+
+static inline char* to_binary_string(uint16_t value) {
+    static char str[20]; // 16 bits + 3 spaces + null terminator
+    char *p = str;
+
+    for (int i = 15; i >= 0; i--) {
+        *p++ = ((value >> i) & 1) ? '1' : '0';
+        if (i % 4 == 0 && i != 0) *p++ = ' ';
+    }
+    *p = '\0';
+    return str;
+}
 
 static inline char get_keycode_char(uint16_t keycode) {
     switch (keycode) {

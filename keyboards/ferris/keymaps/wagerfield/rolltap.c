@@ -8,19 +8,20 @@ bool process_rolltap(uint16_t keycode, keyrecord_t *record) {
 
     if (record->event.pressed) {
         uint8_t code = MRT_GET_KEYCODE(keycode);
-        uint8_t mods = 0;
+        uint8_t mods = MRT_GET_MODS(keycode);
+        uint8_t state = MRT_GET_STATE(keycode);
 
-        bool shifted = MRT_GET_SHIFTED(keycode);
-        bool altered = MRT_GET_ALTERED(keycode);
+        dprintf("%s [%c] C:%u S:%u M:%u\n",
+            to_binary_string(keycode),
+            get_keycode_char(code),
+            code,
+            state,
+            mods
+        );
 
-        if (shifted) mods |= MOD_LSFT;
-        if (altered) mods |= MOD_LALT;
-
-        dprintf("[%c] C:%u M:%u S:%u A:%u\n", get_keycode_char(code), code, mods, shifted, altered);
-
-        set_mods(mods);
+        set_mods(state);
         tap_code(code);
-        unregister_mods(mods);
+        unregister_mods(state);
     }
 
     return false;
