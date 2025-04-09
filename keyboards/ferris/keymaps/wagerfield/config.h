@@ -1,3 +1,4 @@
+// clang-format off
 #define RP2040_FLASH_GD25Q64CS
 #pragma once
 
@@ -30,29 +31,17 @@
 // https://docs.qmk.fm/keycodes
 // Layer 0: Letters
 
-// #define LCTL_KC_N LCTL_RT(KC_N)
-// #define LOPT_KC_R LOPT_RT(KC_R)
-// #define LCMD_KC_T LCMD_RT(KC_T)
-// #define LSFT_KC_S LSFT_RT(KC_S)
-// #define HYPR_KC_G HYPR_RT(KC_G)
+#define LCTL_KC_N LCTL_RT(KC_N)
+#define LOPT_KC_R LOPT_RT(KC_R)
+#define LCMD_KC_T LCMD_RT(KC_T)
+#define LSFT_KC_S LSFT_RT(KC_S)
+#define HYPR_KC_G HYPR_RT(KC_G)
 
-// #define HYPR_KC_Y HYPR_RT(KC_Y)
-// #define RSFT_KC_H RSFT_RT(KC_H)
-// #define RCMD_KC_A RCMD_RT(KC_A)
-// #define ROPT_KC_E ROPT_RT(KC_E)
-// #define RCTL_KC_I RCTL_RT(KC_I)
-
-#define LCTL_KC_N KC_N
-#define LOPT_KC_R KC_R
-#define LCMD_KC_T KC_T
-#define LSFT_KC_S KC_S
-#define HYPR_KC_G KC_G
-
-#define HYPR_KC_Y KC_Y
-#define RSFT_KC_H KC_H
-#define RCMD_KC_A KC_A
-#define ROPT_KC_E KC_E
-#define RCTL_KC_I KC_I
+#define HYPR_KC_Y HYPR_RT(KC_Y)
+#define RSFT_KC_H RSFT_RT(KC_H)
+#define RCMD_KC_A RCMD_RT(KC_A)
+#define ROPT_KC_E ROPT_RT(KC_E)
+#define RCTL_KC_I RCTL_RT(KC_I)
 
 #define LSFT_OSM  OSM(MOD_LSFT)
 #define LAY1_BSPC LT(1, KC_BSPC)
@@ -61,30 +50,31 @@
 
 // Layer 1: Symbols
 
-#define LCTL_TAB  KC_TAB
-#define LOPT_EXLM KC_EXLM // !
-#define LCMD_EQL  KC_EQL  // =
-#define LSFT_LABK KC_LABK // <
-#define HYPR_SLSH KC_SLSH // /
+#define KC_PND A(KC_3)  // £
+#define KC_POUND KC_PND // £
 
-#define HYPR_PIPE KC_PIPE // |
-#define RSFT_LPRN KC_LPRN // (
-#define RCMD_LCBR KC_LCBR // {
-#define ROPT_LBRC KC_LBRC // [
-#define RCTL_COLN KC_COLN // :
+#define LCTL_TAB  LCTL_RT(KC_TAB)
+#define LOPT_EXLM LOPT_RT(KC_EXLM) // !
+#define LCMD_EQL  LCMD_RT(KC_EQL)  // =
+#define LSFT_LABK LSFT_RT(KC_LABK) // <
+#define HYPR_SLSH HYPR_RT(KC_SLSH) // /
 
-#define KC_POUND  A(KC_3) // £
+#define HYPR_PIPE HYPR_RT(KC_PIPE) // |
+#define RSFT_LPRN RSFT_RT(KC_LPRN) // (
+#define RCMD_LCBR RCMD_RT(KC_LCBR) // {
+#define ROPT_LBRC ROPT_RT(KC_LBRC) // [
+#define RCTL_COLN RCTL_RT(KC_COLN) // :
 
 // Layer 2: Numbers & Navigation
 
-#define LCTL_KC_0 LCTL_T(KC_0)
-#define LOPT_KC_4 LOPT_T(KC_4)
-#define LCMD_KC_5 LCMD_T(KC_5)
-#define LSFT_KC_6 LSFT_T(KC_6)
-#define HYPR_DOT  HYPR_T(KC_DOT)
+#define LCTL_KC_0 LCTL_RT(KC_0)
+#define LOPT_KC_4 LOPT_RT(KC_4)
+#define LCMD_KC_5 LCMD_RT(KC_5)
+#define LSFT_KC_6 LSFT_RT(KC_6)
+#define HYPR_DOT  HYPR_RT(KC_DOT)
 
-#define LCTL_MBTN LCTL_T(MS_BTN1)
-#define LSFT_EQL  LSFT_T(KC_EQL)
+#define LCTL_MBTN LCTL_RT(MS_BTN1)
+#define LSFT_EQL  LSFT_RT(KC_EQL)
 
 // Layer 3: Media & Function Keys
 
@@ -92,14 +82,14 @@
 #define CAPT_AREA LCMD(LSFT(KC_4))
 #define CAPT_WNDW QK_MACRO_0
 
-#define LCTL_MUTE LCTL_T(KC_MUTE)
-#define LOPT_VOLD LOPT_T(KC_VOLD)
-#define LCMD_VOLU LCMD_T(KC_VOLU)
+#define LCTL_MUTE LCTL_RT(KC_MUTE)
+#define LOPT_VOLD LOPT_RT(KC_VOLD)
+#define LCMD_VOLU LCMD_RT(KC_VOLU)
 
-#define RSFT_F5 RSFT_T(KC_F5)
-#define RCMD_F6 RCMD_T(KC_F6)
-#define ROPT_F7 ROPT_T(KC_F7)
-#define RCTL_F8 RCTL_T(KC_F8)
+#define RSFT_F5 RSFT_RT(KC_F5)
+#define RCMD_F6 RCMD_RT(KC_F6)
+#define ROPT_F7 ROPT_RT(KC_F7)
+#define RCTL_F8 RCTL_RT(KC_F8)
 
 #define MDIA_PLAY KC_MPLY
 #define MDIA_PREV KC_MPRV
