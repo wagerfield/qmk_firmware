@@ -1,13 +1,17 @@
-// Place your settings in this file to overwrite default and user settings.
 {
-    // Unofficially, QMK uses spaces for indentation
+    "clangd.arguments": ["--header-insertion=never"],
     "editor.insertSpaces": true,
-    // Configure glob patterns for excluding files and folders.
     "files.exclude": {
         "**/.build": true,
         "**/*.hex": true,
         "**/*.bin": true,
-        "**/*.uf2": true
+        "**/*.uf2": true,
+
+        // Exclude all keyboards except for ferris
+        // Workaround for https://github.com/microsoft/vscode/issues/869
+        "keyboards/[!f]*": true,
+        "keyboards/f[!e]*": true,
+        "keyboards/fe[!r]*": true
     },
     "files.associations": {
         "*.h": "c",
@@ -24,11 +28,7 @@
         "editor.trimAutoWhitespace": false,
         "files.trimTrailingWhitespace": false
     },
-    "python.formatting.provider": "yapf",
     "[json]": {
         "editor.formatOnSave": false
-    },
-    "clangd.arguments": [
-        "--header-insertion=never"
-    ]
+    }
 }
