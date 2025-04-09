@@ -14,17 +14,17 @@
 
 // Bit Positions
 
-#define MRT_KEYCODE_BITS   0 // Bits 00-07: Basic keycode (8 bits)
-#define MRT_SHIFTED_BITS   8 // Bit     08: Shifted state (1 bit)
-#define MRT_ALTERED_BITS   9 // Bit     09: Altered state (1 bit)
-#define MRT_MODIFIER_BITS 10 // Bits 10-13: Modifiers (4 bits)
+#define MRT_KEYCODE_BITS  0 // Bits 00-07: Basic keycode (8 bits)
+#define MRT_MODIFIER_BITS 8 // Bits 08-11: Modifiers (4 bits)
+#define MRT_SHIFTED_BITS 12 // Bit     12: Shifted state (1 bit)
+#define MRT_ALTERED_BITS 13 // Bit     13: Altered state (1 bit)
 
 // Bit Masks
 
 #define MRT_KEYCODE_MASK  0x00FF // 0000 0000 1111 1111
-#define MRT_SHIFTED_MASK  0x0100 // 0000 0001 0000 0000
-#define MRT_ALTERED_MASK  0x0200 // 0000 0010 0000 0000
-#define MRT_MODIFIER_MASK 0x3C00 // 0011 1100 0000 0000
+#define MRT_MODIFIER_MASK 0x0F00 // 0000 1111 0000 0000
+#define MRT_SHIFTED_MASK  0x1000 // 0001 0000 0000 0000
+#define MRT_ALTERED_MASK  0x2000 // 0010 0000 0000 0000
 #define MRT_MAGIC_MASK    0xC000 // 1100 0000 0000 0000
 #define MRT_MAGIC_VALUE   0x8000 // 1000 0000 0000 0000 (QMK user space)
 
@@ -44,9 +44,9 @@
 
 #define MRT(modifier, keycode) (uint16_t) ( \
     (QK_MODS_GET_BASIC_KEYCODE(keycode) << MRT_KEYCODE_BITS)    | /* bits 00-07: basic keycode */ \
-    (IS_SHIFTED_KEYCODE(keycode) ? (1 << MRT_SHIFTED_BITS) : 0) | /* bit     08: shifted state */ \
-    (IS_ALTERED_KEYCODE(keycode) ? (1 << MRT_ALTERED_BITS) : 0) | /* bit     09: altered state */ \
-    ((modifier) << MRT_MODIFIER_BITS)                           | /* bits 10-13: modifiers     */ \
+    (IS_SHIFTED_KEYCODE(keycode) ? (1 << MRT_SHIFTED_BITS) : 0) | /* bit     12: shifted state */ \
+    (IS_ALTERED_KEYCODE(keycode) ? (1 << MRT_ALTERED_BITS) : 0) | /* bit     13: altered state */ \
+    ((modifier) << MRT_MODIFIER_BITS)                           | /* bits 08-11: modifiers     */ \
     MRT_MAGIC_VALUE                                               /* bits 14-15: magic value   */ \
 )
 
