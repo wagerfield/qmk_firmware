@@ -1,7 +1,8 @@
 // clang-format off
-#include "rolltap.h"
 #include "action_util.h"
 #include "debug.h"
+#include "rolltap.h"
+#include "helpers.h"
 
 bool process_rolltap(uint16_t keycode, keyrecord_t *record) {
     if (!IS_MRT(keycode)) return true;
