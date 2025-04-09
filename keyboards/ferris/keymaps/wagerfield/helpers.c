@@ -2,18 +2,6 @@
 #include <quantum_keycodes.h>
 #include "helpers.h"
 
-char *to_binary_string(uint16_t value) {
-    static char str[20]; // 16 bits + 3 spaces + null terminator
-    char *p = str;
-
-    for (int i = 15; i >= 0; i--) {
-        *p++ = ((value >> i) & 1) ? '1' : '0';
-        if (i % 4 == 0 && i != 0) *p++ = ' ';
-    }
-    *p++ = '\0';
-    return str;
-}
-
 char get_keycode_char(uint16_t keycode) {
     switch (keycode) {
         // Letters
