@@ -4,31 +4,44 @@
 #include "action.h"
 #include "quantum_keycodes.h"
 
+#define EVENTS_SIZE 14
 #define MATRIX_HALF MATRIX_ROWS / 2
+
+// Sides
+
+#define LHS 'L'
+#define RHS 'R'
+
+// Fingers
+
+#define PINKIE 'P'
+#define RING   'R'
+#define MIDDLE 'M'
+#define INDEX  'I'
+#define THUMB  'T'
 
 // Timing Configuration
 
-#define MRT_TAPPING_TERM  200
-#define MRT_ROLLING_TERM  200
-#define MRT_MODIFIER_TERM 120
+#define MRT_ROLLING_TERM 200
+#define MRT_TAPPING_TERM 120
 
 // Bit Positions
 
-#define MRT_KEYCODE_BITS  0 // Bits 00-07: Basic Keycode (8 bits)
-#define MRT_MODIFIER_BITS 8 // Bits 08-11: Modifiers (4 bits)
-#define MRT_STATE_BITS   12 // Bits 12-13: State (2 bits)
+#define MRT_TAP_CODE_BITS  0 // Bits 00-07: Basic Keycode (8 bits)
+#define MRT_HOLD_MODS_BITS 8 // Bits 08-11: Hold Mods (4 bits)
+#define MRT_TAP_MODS_BITS 12 // Bits 12-13: Tap Mods (2 bits)
 
 // Bit Masks
 
-#define MRT_KEYCODE_MASK  0x00FF // 0000 0000 1111 1111
-#define MRT_MODIFIER_MASK 0x0F00 // 0000 1111 0000 0000
-#define MRT_STATE_MASK    0x3000 // 0011 0000 0000 0000
-#define MRT_MAGIC_MASK    0xC000 // 1100 0000 0000 0000
-#define MRT_MAGIC_VALUE   0x8000 // 1000 0000 0000 0000 (QMK user space)
+#define MRT_TAP_CODE_MASK  0x00FF // 0000 0000 1111 1111
+#define MRT_HOLD_MODS_MASK 0x0F00 // 0000 1111 0000 0000
+#define MRT_TAP_MODS_MASK  0x3000 // 0011 0000 0000 0000
+#define MRT_MAGIC_MASK     0xC000 // 1100 0000 0000 0000
+#define MRT_MAGIC_VALUE    0x8000 // 1000 0000 0000 0000 (QMK user space)
 
-// Extract State Macro
+// Map Tap Mods Macro
 
-#define MRT_EXTRACT_STATE(keycode) ( \
+#define MRT_MAP_TAP_MODS(keycode) ( \
     ((QK_MODS_GET_MODS(keycode) & MOD_LSFT) ? 0x1 : 0) | \
     ((QK_MODS_GET_MODS(keycode) & MOD_LALT) ? 0x2 : 0) \
 )
@@ -36,9 +49,9 @@
 // Mod Roll Tap Macro
 
 #define MRT(modifier, keycode) (uint16_t) ( \
-    (QK_MODS_GET_BASIC_KEYCODE(keycode) << MRT_KEYCODE_BITS) | \
-    (MRT_EXTRACT_STATE(keycode) << MRT_STATE_BITS) | \
-    ((modifier) << MRT_MODIFIER_BITS) | \
+    (QK_MODS_GET_BASIC_KEYCODE(keycode) << MRT_TAP_CODE_BITS) | \
+    (MRT_MAP_TAP_MODS(keycode) << MRT_TAP_MODS_BITS) | \
+    ((modifier) << MRT_HOLD_MODS_BITS) | \
     MRT_MAGIC_VALUE \
 )
 
@@ -60,9 +73,9 @@
 
 #define IS_MRT(keycode) (((keycode) & MRT_MAGIC_MASK) == MRT_MAGIC_VALUE)
 
-#define MRT_GET_KEYCODE(keycode) (((keycode) & MRT_KEYCODE_MASK) >> MRT_KEYCODE_BITS)
-#define MRT_GET_STATE(keycode) ((((keycode) & MRT_STATE_MASK) >> MRT_STATE_BITS) << 1)
-#define MRT_GET_MODS(keycode) (((keycode) & MRT_MODIFIER_MASK) >> MRT_MODIFIER_BITS)
+#define MRT_GET_TAP_CODE(keycode) (((keycode) & MRT_TAP_CODE_MASK) >> MRT_TAP_CODE_BITS)
+#define MRT_GET_TAP_MODS(keycode) ((((keycode) & MRT_TAP_MODS_MASK) >> MRT_TAP_MODS_BITS) << 1)
+#define MRT_GET_HOLD_MODS(keycode) (((keycode) & MRT_HOLD_MODS_MASK) >> MRT_HOLD_MODS_BITS)
 
 // Function Declarations
 
