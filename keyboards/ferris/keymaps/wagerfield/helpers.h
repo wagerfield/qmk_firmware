@@ -19,4 +19,4 @@
     BYTE_TO_BINARY_INT8((i) >> 8), \
     BYTE_TO_BINARY_INT8(i)
 
-char get_keycode_char(uint16_t keycode);
+char get_key_char(uint16_t keycode);

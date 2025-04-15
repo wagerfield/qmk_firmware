@@ -2,7 +2,7 @@
 #include <quantum_keycodes.h>
 #include "helpers.h"
 
-char get_keycode_char(uint16_t keycode) {
+char get_key_char(uint16_t keycode) {
     switch (keycode) {
         // Letters
         case KC_A ... KC_Z: return 'A' + (keycode - KC_A);
