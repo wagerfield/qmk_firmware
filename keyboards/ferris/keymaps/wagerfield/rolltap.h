@@ -20,10 +20,11 @@
 #define INDEX  'I'
 #define THUMB  'T'
 
+
 // Timing Configuration
 
 #define MRT_ROLLING_TERM 200
-#define MRT_TAPPING_TERM 120
+#define MRT_TAPPING_TERM 150
 
 // Bit Positions
 

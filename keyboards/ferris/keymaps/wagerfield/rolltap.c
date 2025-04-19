@@ -169,6 +169,13 @@ bool process_rolltap(uint16_t keycode, keyrecord_t *record) {
             return false;
         }
 
+        // Same hand modifier tapping eg. LCTL_KC_N -> LOPT_KC_R
+        if (both_mods && same_side && !rolling) {
+            // dprintf("[2] %c -> %c same side chording\n", prev_char, curr_char);
+            apply_event(curr_index, rolling_term);
+            return false;
+        }
+
         // Opposite hand modifier tapping eg. LSFT_KC_S -> RCTL_KC_I
         if (both_mods && !same_side && !rolling) {
             // dprintf("[3] %c -> %c opposite side tapping\n", prev_char, curr_char);
