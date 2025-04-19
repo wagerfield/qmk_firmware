@@ -5,7 +5,7 @@
 // Tap Hold
 // https://docs.qmk.fm/tap_hold
 #define QUICK_TAP_TERM 0
-#define TAPPING_TERM 180
+#define TAPPING_TERM 200
 
 // Caps Word
 // https://docs.qmk.fm/features/caps_word
@@ -30,8 +30,8 @@
 // https://docs.qmk.fm/keycodes
 // Layer 0: Letters
 
-#define LCTL_KC_N LCTL_T(KC_N)
-#define LOPT_KC_R LOPT_T(KC_R)
+#define LOPT_KC_N LOPT_T(KC_N)
+#define LCTL_KC_R LCTL_T(KC_R)
 #define LCMD_KC_T LCMD_T(KC_T)
 #define LSFT_KC_S LSFT_T(KC_S)
 #define HYPR_KC_G HYPR_T(KC_G)
@@ -39,8 +39,8 @@
 #define HYPR_KC_Y HYPR_T(KC_Y)
 #define RSFT_KC_H RSFT_T(KC_H)
 #define RCMD_KC_A RCMD_T(KC_A)
-#define ROPT_KC_E ROPT_T(KC_E)
-#define RCTL_KC_I RCTL_T(KC_I)
+#define RCTL_KC_E RCTL_T(KC_E)
+#define ROPT_KC_I ROPT_T(KC_I)
 
 #define LSFT_OSM  OSM(MOD_LSFT)
 #define LAY1_BSPC LT(1, KC_BSPC)
@@ -52,8 +52,8 @@
 #define KC_PND A(KC_3)  // £
 #define KC_POUND KC_PND // £
 
-#define LCTL_TAB  LCTL_T(KC_TAB)
-#define LOPT_EXLM LOPT_T(KC_EXLM) // !
+#define LOPT_TAB  LOPT_T(KC_TAB)
+#define LCTL_EXLM LCTL_T(KC_EXLM) // !
 #define LCMD_EQL  LCMD_T(KC_EQL)  // =
 #define LSFT_LABK LSFT_T(KC_LABK) // <
 #define HYPR_SLSH HYPR_T(KC_SLSH) // /
@@ -61,13 +61,13 @@
 #define HYPR_PIPE HYPR_T(KC_PIPE) // |
 #define RSFT_LPRN RSFT_T(KC_LPRN) // (
 #define RCMD_LCBR RCMD_T(KC_LCBR) // {
-#define ROPT_LBRC ROPT_T(KC_LBRC) // [
-#define RCTL_COLN RCTL_T(KC_COLN) // :
+#define RCTL_LBRC RCTL_T(KC_LBRC) // [
+#define ROPT_COLN ROPT_T(KC_COLN) // :
 
 // Layer 2: Numbers & Navigation
 
-#define LCTL_KC_0 LCTL_T(KC_0)
-#define LOPT_KC_4 LOPT_T(KC_4)
+#define LOPT_KC_0 LOPT_T(KC_0)
+#define LCTL_KC_4 LCTL_T(KC_4)
 #define LCMD_KC_5 LCMD_T(KC_5)
 #define LSFT_KC_6 LSFT_T(KC_6)
 #define HYPR_DOT  HYPR_T(KC_DOT)
@@ -81,14 +81,14 @@
 #define CAPT_AREA LCMD(LSFT(KC_4))
 #define CAPT_WNDW QK_MACRO_0
 
-#define LCTL_MUTE LCTL_T(KC_MUTE)
-#define LOPT_VOLD LOPT_T(KC_VOLD)
+#define LOPT_MUTE LOPT_T(KC_MUTE)
+#define LCTL_VOLD LCTL_T(KC_VOLD)
 #define LCMD_VOLU LCMD_T(KC_VOLU)
 
 #define RSFT_F5 RSFT_T(KC_F5)
 #define RCMD_F6 RCMD_T(KC_F6)
-#define ROPT_F7 ROPT_T(KC_F7)
-#define RCTL_F8 RCTL_T(KC_F8)
+#define RCTL_F7 RCTL_T(KC_F7)
+#define ROPT_F8 ROPT_T(KC_F8)
 
 #define MDIA_PLAY KC_MPLY
 #define MDIA_PREV KC_MPRV
