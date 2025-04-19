@@ -3,7 +3,7 @@
 #include "helpers.h"
 
 char get_key_char(uint16_t keycode) {
-    switch (keycode) {
+    switch (keycode & 0xFF) {
         // Letters
         case KC_A ... KC_Z: return 'A' + (keycode - KC_A);
 

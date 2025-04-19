@@ -1,6 +1,6 @@
 // clang-format off
 #include QMK_KEYBOARD_H
-#include "rolltap.h"
+#include "helpers.h"
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Letters
@@ -39,16 +39,77 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Media & Function Keys
     [3] = LAYOUT_split_3x5_2(
         KC_MCTL   , MDIA_PREV , MDIA_NEXT , MDIA_PLAY , LOCK_SCRN ,
-        CAPT_SCRN , KC_F1     , KC_F2     , KC_F3     , KC_F4     ,
+        CAPT_AREA , KC_F1     , KC_F2     , KC_F3     , KC_F4     ,
         LCTL_MUTE , LOPT_VOLD , LCMD_VOLU , BWSR_BACK , BWSR_FWRD ,
-        CAPT_AREA , RSFT_F5   , RCMD_F6   , ROPT_F7   , RCTL_F8   ,
+        CAPT_WNDW , RSFT_F5   , RCMD_F6   , ROPT_F7   , RCTL_F8   ,
         KC_SLEP   , KC_BRID   , KC_BRIU   , PREV_TAB  , NEXT_TAB  ,
-        CAPT_WNDW , KC_F9     , KC_F10    , KC_F11    , KC_F12    ,
+        CAPT_SCRN , KC_F9     , KC_F10    , KC_F11    , KC_F12    ,
         KC_LSFT   , KC_LCTL   ,
         QK_BOOT   , KC_NO
     )
 };
 
+static uint16_t curr_time;
+static uint16_t prev_time;
+
+static uint8_t curr_group;
+static uint8_t prev_group;
+
+static char curr_char;
+static char prev_char;
+
+// 0 1 2 3 4 L   R 0 1 2 3 4
+// F F F F F 0   4 F F F F F
+// F F F F F 1   5 F F F F F
+// F F F F F 2   6 F F F F F
+//       T T 3   7 T T
+
+static uint8_t get_group(keyrecord_t *record) {
+    uint8_t row = record->event.key.row;
+    if (row == 3) return 2; // Left Thumb
+    if (row == 7) return 3; // Right Thumb
+    if (row < 3) return 0; // Left Finger
+    return 1; // Right Finger
+}
+
+static bool tap(uint16_t keycode) {
+    tap_code16(keycode);
+    return false;
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    return process_rolltap(keycode, record);
+    if (record->event.pressed) {
+        prev_time = curr_time;
+        prev_char = curr_char;
+        prev_group = curr_group;
+
+        curr_time = record->event.time;
+        curr_char = get_key_char(keycode);
+        curr_group = get_group(record);
+
+        uint16_t elapsed = timer_elapsed(prev_time);
+
+        dprintf("[%c:%u] -> [%c:%u] %ums\n", prev_char, prev_group, curr_char, curr_group, elapsed);
+
+        switch (keycode) {
+            case CAPT_WNDW:
+                tap(CAPT_AREA);
+                wait_ms(50);
+                tap(KC_SPACE);
+                return false;
+        }
+
+        if (record->tap.count) {
+            switch (keycode) {
+                case LOPT_EXLM: return tap(KC_EXLM);
+                case LSFT_LABK: return tap(KC_LABK);
+                case HYPR_PIPE: return tap(KC_PIPE);
+                case RSFT_LPRN: return tap(KC_LPRN);
+                case RCMD_LCBR: return tap(KC_LCBR);
+                case RCTL_COLN: return tap(KC_COLN);
+            }
+        }
+    }
+
+    return true;
 }
