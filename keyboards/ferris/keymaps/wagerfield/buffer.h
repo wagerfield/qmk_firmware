@@ -4,14 +4,14 @@
 #include "action.h"
 
 #ifndef KEYRECORD_BUFFER_SIZE
-#define KEYRECORD_BUFFER_SIZE 16
+#define KEYRECORD_BUFFER_SIZE 8
 #endif
 
 typedef struct {
     keyrecord_t records[KEYRECORD_BUFFER_SIZE];
-    uint8_t head;  // Points to the next free slot
-    uint8_t tail;  // Points to the oldest element
-    uint8_t size;  // Current number of elements
+    uint8_t head; // Points to the next free slot
+    uint8_t tail; // Points to the oldest element
+    uint8_t size; // Current number of elements
 } keyrecord_buffer_t;
 
 /**
@@ -27,6 +27,37 @@ void buffer_init(keyrecord_buffer_t *buffer);
  * @param buffer Pointer to the keyrecord buffer to clear
  */
 void buffer_clear(keyrecord_buffer_t *buffer);
+
+/**
+ * @brief Get the number of elements in the buffer
+ *
+ * @param buffer Pointer to the keyrecord buffer
+ * @return Current size of the buffer
+ */
+uint8_t buffer_get_size(keyrecord_buffer_t *buffer);
+
+/**
+ * @brief Get the capacity of the buffer
+ *
+ * @return Total capacity of the buffer
+ */
+uint8_t buffer_get_capacity(void);
+
+/**
+ * @brief Check if buffer is empty
+ *
+ * @param buffer Pointer to the keyrecord buffer
+ * @return true if buffer is empty, false otherwise
+ */
+bool buffer_is_empty(keyrecord_buffer_t *buffer);
+
+/**
+ * @brief Check if buffer is full
+ *
+ * @param buffer Pointer to the keyrecord buffer
+ * @return true if buffer is full, false otherwise
+ */
+bool buffer_is_full(keyrecord_buffer_t *buffer);
 
 /**
  * @brief Add a keyrecord to the buffer
@@ -64,34 +95,3 @@ bool buffer_peek(keyrecord_buffer_t *buffer, keyrecord_t *record);
  * @return true if successful, false if index is out of bounds
  */
 bool buffer_peek_at(keyrecord_buffer_t *buffer, keyrecord_t *record, uint8_t index);
-
-/**
- * @brief Check if buffer is empty
- *
- * @param buffer Pointer to the keyrecord buffer
- * @return true if buffer is empty, false otherwise
- */
-bool buffer_is_empty(keyrecord_buffer_t *buffer);
-
-/**
- * @brief Check if buffer is full
- *
- * @param buffer Pointer to the keyrecord buffer
- * @return true if buffer is full, false otherwise
- */
-bool buffer_is_full(keyrecord_buffer_t *buffer);
-
-/**
- * @brief Get the number of elements in the buffer
- *
- * @param buffer Pointer to the keyrecord buffer
- * @return Current size of the buffer
- */
-uint8_t buffer_get_size(keyrecord_buffer_t *buffer);
-
-/**
- * @brief Get the capacity of the buffer
- *
- * @return Total capacity of the buffer
- */
-uint8_t buffer_get_capacity(void);

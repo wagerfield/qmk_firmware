@@ -11,6 +11,22 @@ void buffer_clear(keyrecord_buffer_t *buffer) {
     buffer->size = 0;
 }
 
+uint8_t buffer_get_size(keyrecord_buffer_t *buffer) {
+    return buffer->size;
+}
+
+uint8_t buffer_get_capacity(void) {
+    return KEYRECORD_BUFFER_SIZE;
+}
+
+bool buffer_is_empty(keyrecord_buffer_t *buffer) {
+    return buffer->size == 0;
+}
+
+bool buffer_is_full(keyrecord_buffer_t *buffer) {
+    return buffer->size == KEYRECORD_BUFFER_SIZE;
+}
+
 bool buffer_enqueue(keyrecord_buffer_t *buffer, keyrecord_t record) {
     if (buffer_is_full(buffer)) return false;
     buffer->records[buffer->head] = record;
@@ -39,20 +55,4 @@ bool buffer_peek_at(keyrecord_buffer_t *buffer, keyrecord_t *record, uint8_t ind
     uint8_t actual_index = (buffer->tail + index) % KEYRECORD_BUFFER_SIZE;
     *record = buffer->records[actual_index];
     return true;
-}
-
-bool buffer_is_empty(keyrecord_buffer_t *buffer) {
-    return buffer->size == 0;
-}
-
-bool buffer_is_full(keyrecord_buffer_t *buffer) {
-    return buffer->size == KEYRECORD_BUFFER_SIZE;
-}
-
-uint8_t buffer_get_size(keyrecord_buffer_t *buffer) {
-    return buffer->size;
-}
-
-uint8_t buffer_get_capacity(void) {
-    return KEYRECORD_BUFFER_SIZE;
 }
