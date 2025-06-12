@@ -1,6 +1,7 @@
 // clang-format off
 #include QMK_KEYBOARD_H
-#include "caps_word.h"
+
+#include "modtap.h"
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Letters
@@ -49,110 +50,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     )
 };
 
-static uint16_t curr_time;
-static uint16_t prev_time;
-
-static uint8_t curr_group;
-static uint8_t prev_group;
-
-static uint8_t curr_mods;
-static uint8_t prev_mods;
-
-static char curr_char;
-static char prev_char;
-
-// 0 1 2 3 4 L   R 0 1 2 3 4
-// F F F F F 0   4 F F F F F
-// F F F F F 1   5 F F F F F
-// F F F F F 2   6 F F F F F
-//       T T 3   7 T T
-
-static uint8_t get_group(keyrecord_t *record) {
-    uint8_t row = record->event.key.row;
-    if (row == 3) return 2; // Left Thumb
-    if (row == 7) return 3; // Right Thumb
-    if (row < 3) return 0; // Left Finger
-    return 1; // Right Finger
-}
-
-static char get_char(uint16_t keycode) {
-    switch (keycode & 0xFF) {
-        case KC_A ... KC_Z: return 'A' + (keycode - KC_A);
-        case KC_SPACE: return '_';
-        default: return '?';
-    }
-}
-
-static uint16_t map_code16(uint16_t keycode) {
-    switch (keycode) {
-        case LOPT_EXLM: return KC_EXLM;
-        case LSFT_LABK: return KC_LABK;
-        case HYPR_PIPE: return KC_PIPE;
-        case RSFT_LPRN: return KC_LPRN;
-        case RCMD_LCBR: return KC_LCBR;
-        case RCTL_COLN: return KC_COLN;
-        default: return keycode;
-    }
-}
-
-static bool tap(uint16_t keycode) {
-    bool caps = is_caps_word_on();
-    if (caps) register_mods(MOD_LSFT);
-    tap_code16(map_code16(keycode));
-    if (caps) unregister_mods(MOD_LSFT);
-    return false;
+bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
+    return pre_process_modtap(keycode, record);
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (record->event.pressed) {
-        prev_time = curr_time;
-        prev_char = curr_char;
-        prev_mods = curr_mods;
-        prev_group = curr_group;
-
-        curr_time = record->event.time;
-        curr_char = get_char(keycode);
-        curr_mods = QK_MOD_TAP_GET_MODS(keycode);
-        curr_group = get_group(record);
-
-        uint16_t elapsed = timer_elapsed(prev_time);
-
-        bool both_mods = curr_mods && prev_mods;
-        bool same_group = curr_group == prev_group;
-
-        bool is_rolling = elapsed < 250;
-        bool is_tapping = record->tap.count > 0;
-        bool is_chording = both_mods && same_group;
-        bool should_tap = is_tapping || (is_rolling && !is_chording);
-
-        if (curr_char == '_') dprintf("\n");
-        else if (prev_char != '_') {
-            dprintf("[%c:%u] -> [%c:%u] %3ums (%s%s%s) -> %s\n",
-                prev_char, prev_group,
-                curr_char, curr_group,
-                elapsed,
-                is_tapping ? "T" : "",
-                is_rolling ? "R" : "",
-                is_chording ? "C" : "",
-                should_tap ? "TAP" : ""
-            );
-        }
-
-        if (keycode == CAPT_WNDW) {
-            tap(CAPT_AREA);
-            wait_ms(50);
-            tap(KC_SPACE);
-            return false;
-        }
-
-        if (is_tapping || (is_rolling && !is_chording)) {
-            return tap(keycode);
-        }
-    }
-
-    return true;
-}
-
-uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-    return 200;
+    return process_modtap(keycode, record);
 }
