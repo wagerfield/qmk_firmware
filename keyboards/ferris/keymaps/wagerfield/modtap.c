@@ -50,53 +50,83 @@ static uint16_t map_keycode(uint16_t keycode) {
 static void tap(uint16_t keycode, keyrecord_t record) {
     uint8_t index = GET_INDEX(record);
     if (tapped[index] || !IS_MOD_TAP(keycode)) return;
-    dprintf("  TAP %c\n", get_keychar(keycode));
-    clear_mods();
-    tap_code16(map_keycode(keycode));
+
+    uint16_t tap_keycode = map_keycode(keycode);
+    register_code16(tap_keycode);
+    unregister_code16(tap_keycode);
     tapped[index] = true;
 }
 
 bool pre_process_modtap(uint16_t keycode, keyrecord_t *record) {
-    // return true;
+    uint8_t index = GET_INDEX((*record));
 
-    keyrecord_t copy = *record;
-    uint8_t index = GET_INDEX(copy);
-
-    if (tapped[index]) {
-        tapped[index] = false;
-        return false;
+    // Handle key release - clear tapped flag
+    if (!record->event.pressed) {
+        if (tapped[index]) {
+            tapped[index] = false;
+            return false; // Skip QMK processing for tapped keys
+        }
+        return true;
     }
 
-    if (record->event.pressed) {
-        prev_keycode = curr_keycode;
-        curr_keycode = keycode;
+    // Handle key press
+    if (tapped[index]) {
+        return false; // Skip QMK processing if already tapped
+    }
 
-        prev_record = curr_record;
-        curr_record = *record;
+    prev_keycode = curr_keycode;
+    curr_keycode = keycode;
 
-        uint16_t elapsed = GET_ELAPSED(prev_record);
+    prev_record = curr_record;
+    curr_record = *record;
 
-        char prev_keychar = get_keychar(prev_keycode);
-        char curr_keychar = get_keychar(curr_keycode);
+    // Only apply custom logic to mod-tap keys
+    if (!IS_MOD_TAP(keycode)) {
+        return true;
+    }
 
-        bool is_home_roll = IS_HOME_ROLL(curr_record, prev_record);
-        bool is_same_side = IS_SAME_SIDE(curr_record, prev_record);
-        bool is_rolling = IS_ROLLING(elapsed);
+    uint16_t elapsed = GET_ELAPSED(prev_record);
+    bool is_rolling = IS_ROLLING(elapsed);
 
-        dprintf("%c -> %c %4ums is_rolling: %u, is_same_side: %u, is_home_roll: %u\n",
-                prev_keychar, curr_keychar, elapsed,
-                is_rolling, is_same_side, is_home_roll);
-
-        if (is_rolling && (is_home_roll || is_same_side)) {
-            tap(prev_keycode, prev_record);
-            tap(curr_keycode, curr_record);
-            return false;
-        }
+    // Rule 1: Mod-tap key pressed immediately after a non-mod-tap key -> tap
+    if (is_rolling && prev_keycode != KC_NO && !IS_MOD_TAP(prev_keycode)) {
+        tap(keycode, *record);
+        return false;
     }
 
     return true;
 }
 
 bool process_modtap(uint16_t keycode, keyrecord_t *record) {
+    // Check if this is a symbol layer key that should always tap
+    bool is_symbol_modtap = (keycode == LOPT_EXLM || keycode == LSFT_LABK ||
+                             keycode == HYPR_PIPE || keycode == RSFT_LPRN ||
+                             keycode == RCMD_LCBR || keycode == ROPT_LBRC ||
+                             keycode == RCTL_COLN || keycode == LCTL_TAB ||
+                             keycode == LCMD_EQL || keycode == HYPR_SLSH);
+
+    // Force symbol mod-tap keys to always produce their tap symbols
+    if (is_symbol_modtap && record->event.pressed) {
+        uint16_t tap_keycode = map_keycode(keycode);
+        register_code16(tap_keycode);
+        unregister_code16(tap_keycode);
+        return false;
+    }
+
+    if (!record->event.pressed) {
+        return true;
+    }
+
+    // Rule 2: Non-mod-tap key pressed immediately after mod-tap key on same hand -> tap the mod-tap
+    if (prev_keycode != KC_NO && IS_MOD_TAP(prev_keycode) && !IS_MOD_TAP(keycode)) {
+        uint16_t elapsed = GET_ELAPSED(prev_record);
+        bool is_rolling = IS_ROLLING(elapsed);
+        bool is_same_side = IS_SAME_SIDE((*record), prev_record);
+
+        if (is_rolling && is_same_side) {
+            tap(prev_keycode, prev_record);
+        }
+    }
+
     return true;
 }
