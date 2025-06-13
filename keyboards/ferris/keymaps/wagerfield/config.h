@@ -4,16 +4,14 @@
 
 // Tap Hold
 // https://docs.qmk.fm/tap_hold
-// #define CHORDAL_HOLD
 #define PERMISSIVE_HOLD
 #define TAPPING_TERM 200
 #define FLOW_TAP_TERM 150
-// #define QUICK_TAP_TERM 150
 
 // Caps Word
 // https://docs.qmk.fm/features/caps_word
 #define DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD
-#define CAPS_WORD_IDLE_TIMEOUT 5000 // Time in milliseconds before caps word turns off
+#define CAPS_WORD_IDLE_TIMEOUT 5000
 
 // Keycode Aliases
 // https://docs.qmk.fm/keycodes
