@@ -18,11 +18,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Symbols
     [1] = LAYOUT_split_3x5_2(
         KC_ESC    , KC_AT     , KC_HASH   , KC_ASTR   , KC_GRAVE  ,
-        KC_AMPR   , KC_CIRC   , KC_DOLLAR , KC_COMMA  , KC_SCLN   ,
+        KC_TILDE  , KC_CIRC   , KC_DOLLAR , KC_COMMA  , KC_SCLN   ,
         LCTL_TAB  , LOPT_EXLM , LCMD_EQL  , LSFT_LABK , HYPR_SLSH ,
         HYPR_PIPE , RSFT_LPRN , RCMD_LCBR , ROPT_LBRC , RCTL_COLN ,
         KC_MINUS  , KC_PLUS   , KC_QUES   , KC_RABK   , KC_BSLS   ,
-        KC_TILDE  , KC_RPRN   , KC_RCBR   , KC_RBRC   , KC_PERC   ,
+        KC_AMPR   , KC_RPRN   , KC_RCBR   , KC_RBRC   , KC_PERC   ,
         KC_POUND  , KC_NO     ,
         KC_SPACE  , KC_ENTER
     ),
