@@ -3,6 +3,10 @@
 #include "action.h"
 #include "quantum_keycodes.h"
 
+// 5 finger cols (F) per side -> 5 × 2 = 10
+// 2 thumb cols (T) per side -> 2 × 2 = 4
+#define COLUMNS 14
+
 #define ROLLING_TERM 150
 
 // 0 1 2 3 4 L   R 0 1 2 3 4
