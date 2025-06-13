@@ -1,8 +1,6 @@
 // clang-format off
 #include QMK_KEYBOARD_H
 
-#include "modtap.h"
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Letters
     [0] = LAYOUT_split_3x5_2(
@@ -50,10 +48,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     )
 };
 
-bool pre_process_record_user(uint16_t keycode, keyrecord_t *record) {
-    return pre_process_modtap(keycode, record);
+static bool tap(uint16_t keycode) {
+    tap_code16(keycode);
+    return false;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    return process_modtap(keycode, record);
+    if (!record->event.pressed) return true;
+
+    switch (keycode) {
+        case LOPT_EXLM: return tap(KC_EXLM);
+        case LSFT_LABK: return tap(KC_LABK);
+        case HYPR_PIPE: return tap(KC_PIPE);
+        case RSFT_LPRN: return tap(KC_LPRN);
+        case RCMD_LCBR: return tap(KC_LCBR);
+        case RCTL_COLN: return tap(KC_COLN);
+        default: return true;
+    }
 }
