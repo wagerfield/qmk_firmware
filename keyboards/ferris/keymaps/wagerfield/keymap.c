@@ -54,7 +54,7 @@ static bool tap(uint16_t keycode) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (!record->event.pressed) return true;
+    if (!record->event.pressed || !record->tap.count) return true;
 
     switch (keycode) {
         case LOPT_EXLM: return tap(KC_EXLM);
