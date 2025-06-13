@@ -2,7 +2,8 @@
 #include QMK_KEYBOARD_H
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    // Letters
+    // Letters (Graphite Layout)
+    // https://github.com/rdavison/graphite-layout#readme
     [0] = LAYOUT_split_3x5_2(
         KC_B      , KC_L      , KC_D      , KC_W      , KC_Z      ,
         KC_QUOTE  , KC_F      , KC_O      , KC_U      , KC_J      ,
@@ -65,4 +66,34 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case RCTL_COLN: return tap(KC_COLN);
         default: return true;
     }
+}
+
+bool is_flow_tap_key(uint16_t keycode) {
+    if (get_mods() & MOD_MASK_CAG) return false;
+
+    switch (get_tap_keycode(keycode)) {
+        case KC_A ... KC_Z:
+        case KC_1 ... KC_0:
+
+        case KC_BSPC:
+        case KC_SPC:
+        case KC_ENT:
+
+        case KC_QUOTE:
+        case KC_COMMA:
+        case KC_MINUS:
+        case KC_DOT:
+
+        case KC_AT:
+        case KC_HASH:
+        case KC_EXLM:
+        case KC_QUES:
+
+        case KC_COLN:
+        case KC_SCLN:
+        case KC_SLSH:
+            return true;
+    }
+
+    return false;
 }
