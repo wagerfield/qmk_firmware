@@ -54,8 +54,21 @@ static bool tap(uint16_t keycode) {
     return false;
 }
 
+bool is_flow_tap_key(uint16_t keycode) {
+    if (get_mods() & MOD_MASK_CAG) return false;
+    return get_highest_layer(layer_state) < 1;
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (!record->event.pressed || !record->tap.count) return true;
+    if (!record->event.pressed) return true;
+
+    switch (keycode) {
+        case CAPT_WNDW:
+            SEND_STRING(SS_LCMD(SS_LSFT("4")) SS_DELAY(100) SS_TAP(X_SPACE));
+            return false;
+    }
+
+    if (!record->tap.count) return true;
 
     switch (keycode) {
         case LOPT_EXLM: return tap(KC_EXLM);
@@ -66,34 +79,4 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case RCTL_COLN: return tap(KC_COLN);
         default: return true;
     }
-}
-
-bool is_flow_tap_key(uint16_t keycode) {
-    if (get_mods() & MOD_MASK_CAG) return false;
-
-    switch (get_tap_keycode(keycode)) {
-        case KC_A ... KC_Z:
-        case KC_1 ... KC_0:
-
-        case KC_BSPC:
-        case KC_SPC:
-        case KC_ENT:
-
-        case KC_QUOTE:
-        case KC_COMMA:
-        case KC_MINUS:
-        case KC_DOT:
-
-        case KC_AT:
-        case KC_HASH:
-        case KC_EXLM:
-        case KC_QUES:
-
-        case KC_COLN:
-        case KC_SCLN:
-        case KC_SLSH:
-            return true;
-    }
-
-    return false;
 }
