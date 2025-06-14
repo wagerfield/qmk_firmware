@@ -1,11 +1,12 @@
 // clang-format off
+// #include "quantum_keycodes.h"
 #define RP2040_FLASH_GD25Q64CS
 #pragma once
 
 // Tap Hold
 // https://docs.qmk.fm/tap_hold
 #define PERMISSIVE_HOLD
-#define TAPPING_TERM 200
+#define TAPPING_TERM 175
 #define FLOW_TAP_TERM 150
 
 // Caps Word
