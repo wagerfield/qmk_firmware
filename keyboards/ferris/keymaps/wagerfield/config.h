@@ -6,13 +6,20 @@
 // Tap Hold
 // https://docs.qmk.fm/tap_hold
 #define PERMISSIVE_HOLD
-#define TAPPING_TERM 175
+#define TAPPING_TERM 200
 #define FLOW_TAP_TERM 150
 
 // Caps Word
 // https://docs.qmk.fm/features/caps_word
 #define DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD
 #define CAPS_WORD_IDLE_TIMEOUT 5000
+
+// Custom Keycodes
+#define KC_DICT LCTL(LOPT(KC_D)) // 🎙️ Dictation
+#define KC_DICTATION KC_DICT     // 🎙️ Dictation
+
+#define KC_PND A(KC_3)  // 💰 £
+#define KC_POUND KC_PND // 💰 £
 
 // Keycode Aliases
 // https://docs.qmk.fm/keycodes
@@ -36,9 +43,6 @@
 #define LAY3_ENT  LT(3, KC_ENT)
 
 // Layer 1: Symbols
-
-#define KC_PND A(KC_3)  // £
-#define KC_POUND KC_PND // £
 
 #define LCTL_TAB  LCTL_T(KC_TAB)
 #define LOPT_EXLM LOPT_T(KC_EXLM) // !

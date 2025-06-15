@@ -44,7 +44,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         CAPT_WNDW , RSFT_F5   , RCMD_F6   , ROPT_F7   , RCTL_F8   ,
         KC_SLEP   , KC_BRID   , KC_BRIU   , PREV_TAB  , NEXT_TAB  ,
         CAPT_SCRN , KC_F9     , KC_F10    , KC_F11    , KC_F12    ,
-        KC_LSFT   , KC_LCTL   ,
+        KC_LSFT   , KC_DICT   ,
         QK_BOOT   , KC_NO
     )
 };
