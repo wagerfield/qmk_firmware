@@ -28,11 +28,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Numbers & Navigation
     [2] = LAYOUT_split_3x5_2(
         KC_ASTR   , KC_1      , KC_2      , KC_3      , KC_PLUS   ,
-        MS_WHLR   , MS_WHLU   , MS_WHLD   , MS_WHLL   , KC_BSPC   ,
+        MS_LEFT   , MS_DOWN   , MS_UP     , MS_RGHT   , KC_BSPC   ,
         LCTL_KC_0 , LOPT_KC_4 , LCMD_KC_5 , LSFT_KC_6 , HYPR_DOT  ,
-        KC_LEFT   , KC_DOWN   , KC_UP     , KC_RIGHT  , KC_ENTER  ,
+        KC_LEFT   , KC_DOWN   , KC_UP     , KC_RIGHT  , KC_COLON  ,
         KC_SLASH  , KC_7      , KC_8      , KC_9      , KC_MINUS  ,
-        MS_LEFT   , MS_DOWN   , MS_UP     , MS_RGHT   , KC_SPACE  ,
+        MS_WHLR   , MS_WHLU   , MS_WHLD   , MS_WHLL   , KC_SPACE  ,
         LSFT_EQL  , LCTL_MBTN ,
         KC_NO     , DB_TOGG
     ),
@@ -69,7 +69,7 @@ bool is_flow_tap_key(uint16_t keycode) {
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case LSFT_OSM:
-            return TAPPING_TERM + 75; // 250ms
+            return TAPPING_TERM + 25; // 200ms
         default:
             return TAPPING_TERM; // 175ms
     }
