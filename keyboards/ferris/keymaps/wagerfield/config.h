@@ -5,9 +5,10 @@
 
 // Tap Hold
 // https://docs.qmk.fm/tap_hold
-#define PERMISSIVE_HOLD
-#define TAPPING_TERM 200
 #define FLOW_TAP_TERM 150
+#define TAPPING_TERM 175
+#define TAPPING_TERM_PER_KEY
+#define PERMISSIVE_HOLD
 
 // Caps Word
 // https://docs.qmk.fm/features/caps_word

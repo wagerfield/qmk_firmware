@@ -56,7 +56,23 @@ static bool tap(uint16_t keycode) {
 
 bool is_flow_tap_key(uint16_t keycode) {
     if (get_mods() & MOD_MASK_CAG) return false;
-    return get_highest_layer(layer_state) < 1;
+
+    switch (keycode) {
+        case LSFT_OSM:
+        case LAY1_BSPC:
+            return false;
+    }
+
+    return get_highest_layer(layer_state) == 0;
+}
+
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case LSFT_OSM:
+            return TAPPING_TERM + 75; // 250ms
+        default:
+            return TAPPING_TERM; // 175ms
+    }
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
