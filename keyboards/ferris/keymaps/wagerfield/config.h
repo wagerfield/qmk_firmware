@@ -6,7 +6,7 @@
 // Tap Hold
 // https://docs.qmk.fm/tap_hold
 #define FLOW_TAP_TERM 150
-#define TAPPING_TERM 175
+#define TAPPING_TERM 200
 #define TAPPING_TERM_PER_KEY
 #define PERMISSIVE_HOLD
 
@@ -57,6 +57,9 @@
 #define ROPT_LBRC LOPT_T(KC_LBRC) // [
 #define RCTL_COLN LCTL_T(KC_COLN) // :
 
+#define RCMD_SPC  LCMD_T(KC_SPC)  // Space
+#define RSFT_ENT  LSFT_T(KC_ENT)  // Enter
+
 // Layer 2: Numbers & Navigation
 
 #define LCTL_KC_0 LCTL_T(KC_0)
@@ -70,19 +73,6 @@
 
 // Layer 3: Media & Function Keys
 
-#define CAPT_SCRN LCMD(LSFT(KC_3))
-#define CAPT_AREA LCMD(LSFT(KC_4))
-#define CAPT_WNDW QK_MACRO_0
-
-#define LCTL_MUTE LCTL_T(KC_MUTE)
-#define LOPT_VOLD LOPT_T(KC_VOLD)
-#define LCMD_VOLU LCMD_T(KC_VOLU)
-
-#define RSFT_F5 LSFT_T(KC_F5)
-#define RCMD_F6 LCMD_T(KC_F6)
-#define ROPT_F7 LOPT_T(KC_F7)
-#define RCTL_F8 LCTL_T(KC_F8)
-
 #define MDIA_PLAY KC_MPLY
 #define MDIA_PREV KC_MPRV
 #define MDIA_NEXT KC_MNXT
@@ -94,3 +84,12 @@
 #define NEXT_TAB LCMD(LSFT(KC_RBRC))
 
 #define LOCK_SCRN LCTL(LCMD(KC_Q))
+
+#define CAPT_SCRN LCMD(LSFT(KC_3))
+#define CAPT_AREA LCMD(LSFT(KC_4))
+#define CAPT_WNDW QK_MACRO_0
+
+#define RSFT_F5 LSFT_T(KC_F5)
+#define RCMD_F6 LCMD_T(KC_F6)
+#define ROPT_F7 LOPT_T(KC_F7)
+#define RCTL_F8 LCTL_T(KC_F8)

@@ -23,7 +23,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_MINUS  , KC_PLUS   , KC_QUES   , KC_RABK   , KC_BSLS   ,
         KC_AMPR   , KC_RPRN   , KC_RCBR   , KC_RBRC   , KC_PERC   ,
         KC_POUND  , KC_NO     ,
-        KC_SPACE  , KC_ENTER
+        RCMD_SPC  , RSFT_ENT
     ),
     // Numbers & Navigation
     [2] = LAYOUT_split_3x5_2(
@@ -38,11 +38,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     // Media & Function Keys
     [3] = LAYOUT_split_3x5_2(
-        KC_MCTL   , MDIA_PREV , MDIA_NEXT , MDIA_PLAY , LOCK_SCRN ,
+        KC_MCTL   , KC_MUTE   , KC_VOLD   , KC_VOLU   , MDIA_PREV ,
         CAPT_AREA , KC_F1     , KC_F2     , KC_F3     , KC_F4     ,
-        LCTL_MUTE , LOPT_VOLD , LCMD_VOLU , BWSR_BACK , BWSR_FWRD ,
+        BWSR_BACK , BWSR_FWRD , PREV_TAB  , NEXT_TAB  , MDIA_PLAY ,
         CAPT_WNDW , RSFT_F5   , RCMD_F6   , ROPT_F7   , RCTL_F8   ,
-        KC_SLEP   , KC_BRID   , KC_BRIU   , PREV_TAB  , NEXT_TAB  ,
+        LOCK_SCRN , KC_SLEP   , KC_BRID   , KC_BRIU   , MDIA_NEXT ,
         CAPT_SCRN , KC_F9     , KC_F10    , KC_F11    , KC_F12    ,
         KC_LSFT   , KC_DICT   ,
         QK_BOOT   , KC_NO
@@ -52,27 +52,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 static bool tap(uint16_t keycode) {
     tap_code16(keycode);
     return false;
-}
-
-bool is_flow_tap_key(uint16_t keycode) {
-    if (get_mods() & MOD_MASK_CAG) return false;
-
-    switch (keycode) {
-        case LSFT_OSM:
-        case LAY1_BSPC:
-            return false;
-    }
-
-    return get_highest_layer(layer_state) == 0;
-}
-
-uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case LSFT_OSM:
-            return TAPPING_TERM + 25; // 200ms
-        default:
-            return TAPPING_TERM; // 175ms
-    }
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -93,6 +72,35 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case RSFT_LPRN: return tap(KC_LPRN);
         case RCMD_LCBR: return tap(KC_LCBR);
         case RCTL_COLN: return tap(KC_COLN);
-        default: return true;
+    }
+
+    return true;
+}
+
+// https://docs.qmk.fm/tap_hold#flow-tap
+bool is_flow_tap_key(uint16_t keycode) {
+    if (get_mods() & MOD_MASK_CAG) return false;
+
+    switch (get_tap_keycode(keycode)) {
+        case KC_A ... KC_Z:
+        case KC_SPACE:
+        case KC_QUOTE:
+        case KC_COMMA:
+        case KC_MINUS:
+        case KC_DOT:
+            return true;
+    }
+
+    return false;
+}
+
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case LSFT_OSM:
+            return TAPPING_TERM + 50; // 250ms
+        case LAY1_BSPC:
+            return TAPPING_TERM - 50; // 150ms
+        default:
+            return TAPPING_TERM; // 200ms
     }
 }
