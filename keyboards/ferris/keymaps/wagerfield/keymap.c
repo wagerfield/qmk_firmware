@@ -28,7 +28,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Numbers & Navigation
     [2] = LAYOUT_split_3x5_2(
         KC_ASTR   , KC_1      , KC_2      , KC_3      , KC_PLUS   ,
-        MS_LEFT   , MS_DOWN   , MS_UP     , MS_RGHT   , KC_BSPC   ,
+        BWSR_BACK , PREV_TAB  , NEXT_TAB  , BWSR_FWRD , KC_BSPC   ,
         LCTL_KC_0 , LOPT_KC_4 , LCMD_KC_5 , LSFT_KC_6 , HYPR_DOT  ,
         KC_LEFT   , KC_DOWN   , KC_UP     , KC_RIGHT  , KC_COLON  ,
         KC_SLASH  , KC_7      , KC_8      , KC_9      , KC_MINUS  ,
@@ -79,7 +79,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 // https://docs.qmk.fm/tap_hold#flow-tap
 bool is_flow_tap_key(uint16_t keycode) {
-    if (get_mods() & MOD_MASK_CAG) return false;
+    if (get_mods()) return false;
 
     switch (get_tap_keycode(keycode)) {
         case KC_A ... KC_Z:
@@ -94,13 +94,26 @@ bool is_flow_tap_key(uint16_t keycode) {
     return false;
 }
 
+uint16_t get_flow_tap_term(uint16_t curr_keycode, keyrecord_t* record, uint16_t prev_keycode) {
+    if (!is_flow_tap_key(curr_keycode)) return 0;
+    if (!is_flow_tap_key(prev_keycode)) return 0;
+
+    switch (curr_keycode) {
+        case LCTL_KC_N:
+        case LOPT_KC_R:
+        case ROPT_KC_E:
+        case RCTL_KC_I:
+            return 200; // 200ms
+        default:
+            return 150; // 150ms
+    }
+}
+
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case LSFT_OSM:
-            return TAPPING_TERM + 50; // 250ms
-        case LAY1_BSPC:
-            return TAPPING_TERM - 50; // 150ms
+            return 250; // 250ms
         default:
-            return TAPPING_TERM; // 200ms
+            return 200; // 200ms
     }
 }
