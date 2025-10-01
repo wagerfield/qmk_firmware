@@ -104,6 +104,8 @@ uint16_t get_flow_tap_term(uint16_t curr_keycode, keyrecord_t* record, uint16_t 
         case ROPT_KC_E:
         case RCTL_KC_I:
             return 200; // 200ms
+        case LAY2_SPC:
+            return 100; // 100ms
         default:
             return 150; // 150ms
     }
