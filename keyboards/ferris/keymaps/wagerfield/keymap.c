@@ -34,18 +34,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_SLASH  , KC_7      , KC_8      , KC_9      , KC_MINUS  ,
         KC_PERC   , KC_CIRC   , KC_DOLLAR , KC_COMMA  , KC_DOT    ,
         LSFT_PND  , LCTL_BSPC ,
-        KC_NO     , DB_TOGG
+        KC_NO     , KC_NO
     ),
     // Media & Function Keys
     [3] = LAYOUT_split_3x5_2(
-        KC_MCTL   , KC_MUTE   , KC_VOLD   , KC_VOLU   , MDIA_PREV ,
+        QK_BOOT   , KC_SLEP   , KC_BRID   , KC_BRIU   , LOCK_SCRN ,
         CAPT_AREA , KC_F1     , KC_F2     , KC_F3     , KC_F4     ,
-        BWSR_BACK , BWSR_FWRD , PREV_TAB  , NEXT_TAB  , MDIA_PLAY ,
+        KC_NO     , KC_MUTE   , KC_VOLD   , KC_VOLU   , KC_MCTL   ,
         CAPT_WNDW , RSFT_F5   , RCMD_F6   , ROPT_F7   , RCTL_F8   ,
-        LOCK_SCRN , KC_SLEP   , KC_BRID   , KC_BRIU   , MDIA_NEXT ,
+        DB_TOGG   , MDIA_PREV , MDIA_PLAY , MDIA_NEXT , KC_NO     ,
         CAPT_SCRN , KC_F9     , KC_F10    , KC_F11    , KC_F12    ,
         KC_LSFT   , KC_DICT   ,
-        QK_BOOT   , KC_NO
+        KC_NO     , KC_NO
     )
 };
 
