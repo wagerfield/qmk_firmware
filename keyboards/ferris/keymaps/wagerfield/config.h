@@ -9,7 +9,7 @@
 #define TAPPING_TERM 200
 #define FLOW_TAP_TERM 150
 #define QUICK_TAP_TERM 0
-#define PERMISSIVE_HOLD
+#define PERMISSIVE_HOLD_PER_KEY
 
 // Caps Word
 // https://docs.qmk.fm/features/caps_word
@@ -67,10 +67,10 @@
 #define LOPT_KC_4 LOPT_T(KC_4)
 #define LCMD_KC_5 LCMD_T(KC_5)
 #define LSFT_KC_6 LSFT_T(KC_6)
-#define HYPR_DOT  HYPR_T(KC_DOT)
+#define HYPR_EQL  HYPR_T(KC_EQL)
 
-#define LCTL_MBTN LCTL_T(MS_BTN1)
-#define LSFT_EQL  LSFT_T(KC_EQL)
+#define LCTL_DEL  LCTL_T(KC_DEL)
+#define LSFT_PND  LSFT_T(KC_PND)
 
 // Layer 3: Media & Function Keys
 

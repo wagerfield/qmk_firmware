@@ -28,12 +28,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // Numbers & Navigation
     [2] = LAYOUT_split_3x5_2(
         KC_ASTR   , KC_1      , KC_2      , KC_3      , KC_PLUS   ,
-        BWSR_BACK , PREV_TAB  , NEXT_TAB  , BWSR_FWRD , KC_BSPC   ,
-        LCTL_KC_0 , LOPT_KC_4 , LCMD_KC_5 , LSFT_KC_6 , HYPR_DOT  ,
+        BWSR_BACK , PREV_TAB  , NEXT_TAB  , BWSR_FWRD , KC_TILDE  ,
+        LCTL_KC_0 , LOPT_KC_4 , LCMD_KC_5 , LSFT_KC_6 , HYPR_EQL  ,
         KC_LEFT   , KC_DOWN   , KC_UP     , KC_RIGHT  , KC_COLON  ,
         KC_SLASH  , KC_7      , KC_8      , KC_9      , KC_MINUS  ,
-        MS_WHLR   , MS_WHLU   , MS_WHLD   , MS_WHLL   , KC_SPACE  ,
-        LSFT_EQL  , LCTL_MBTN ,
+        KC_PERC   , KC_CIRC   , KC_DOLLAR , KC_COMMA  , KC_DOT    ,
+        LSFT_PND  , LCTL_DEL  ,
         KC_NO     , DB_TOGG
     ),
     // Media & Function Keys
@@ -98,12 +98,22 @@ uint16_t get_flow_tap_term(uint16_t curr_keycode, keyrecord_t* record, uint16_t 
     if (!is_flow_tap_key(curr_keycode)) return 0;
     if (!is_flow_tap_key(prev_keycode)) return 0;
 
+    bool is_curr_space = curr_keycode == LAY2_SPC;
+    bool is_prev_space = prev_keycode == LAY2_SPC;
+
+    if (is_curr_space && is_prev_space) return 0;
+
     switch (curr_keycode) {
         case LCTL_KC_N:
         case LOPT_KC_R:
         case ROPT_KC_E:
         case RCTL_KC_I:
-            return 200; // 200ms
+            return 175; // 175ms
+        case LCMD_KC_T:
+        case LSFT_KC_S:
+        case RSFT_KC_H:
+        case RCMD_KC_A:
+            return 125; // 125ms
         case LAY2_SPC:
             return 100; // 100ms
         default:
@@ -117,5 +127,15 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
             return 250; // 250ms
         default:
             return 200; // 200ms
+    }
+}
+
+bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case LOPT_KC_R:
+        case ROPT_KC_E:
+            return false;
+        default:
+            return true;
     }
 }
