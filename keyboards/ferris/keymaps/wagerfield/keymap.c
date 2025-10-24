@@ -33,7 +33,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LEFT   , KC_DOWN   , KC_UP     , KC_RIGHT  , KC_COLON  ,
         KC_SLASH  , KC_7      , KC_8      , KC_9      , KC_MINUS  ,
         KC_PERC   , KC_CIRC   , KC_DOLLAR , KC_COMMA  , KC_DOT    ,
-        LSFT_PND  , LCTL_DEL  ,
+        LSFT_PND  , LCTL_BSPC ,
         KC_NO     , DB_TOGG
     ),
     // Media & Function Keys
@@ -66,12 +66,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (!record->tap.count) return true;
 
     switch (keycode) {
-        case LOPT_EXLM: return tap(KC_EXLM);
-        case LSFT_LABK: return tap(KC_LABK);
-        case HYPR_PIPE: return tap(KC_PIPE);
-        case RSFT_LPRN: return tap(KC_LPRN);
-        case RCMD_LCBR: return tap(KC_LCBR);
-        case RCTL_COLN: return tap(KC_COLN);
+        case LOPT_EXLM: return tap(KC_EXLM); // !
+        case LSFT_LABK: return tap(KC_LABK); // <
+        case HYPR_PIPE: return tap(KC_PIPE); // |
+        case RSFT_LPRN: return tap(KC_LPRN); // (
+        case RCMD_LCBR: return tap(KC_LCBR); // {
+        case RCTL_COLN: return tap(KC_COLN); // :
+        case LSFT_PND:  return tap(KC_PND);  // £
     }
 
     return true;
