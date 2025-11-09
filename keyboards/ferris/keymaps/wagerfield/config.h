@@ -69,8 +69,8 @@
 #define LSFT_KC_6 LSFT_T(KC_6)
 #define HYPR_EQL  HYPR_T(KC_EQL)
 
-#define LCTL_BSPC LCTL_T(KC_BSPC)
-#define LSFT_PND  LSFT_T(KC_PND)
+#define LCMD_BSPC LCMD_T(KC_BSPC)
+#define LSFT_ESC  LSFT_T(KC_ESC)
 
 // Layer 3: Media & Function Keys
 
