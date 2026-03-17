@@ -27,23 +27,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     // Numbers & Navigation
     [2] = LAYOUT_split_3x5_2(
-        KC_PLUS   , KC_1      , KC_2      , KC_3      , KC_ASTR   ,
+        KC_ASTR   , KC_1      , KC_2      , KC_3      , KC_PLUS   ,
         BWSR_BACK , PREV_TAB  , NEXT_TAB  , BWSR_FWRD , KC_CIRC   ,
         LCTL_KC_0 , LOPT_KC_4 , LCMD_KC_5 , LSFT_KC_6 , HYPR_EQL  ,
         KC_LEFT   , KC_DOWN   , KC_UP     , KC_RIGHT  , KC_COLON  ,
-        KC_MINUS  , KC_7      , KC_8      , KC_9      , KC_SLASH  ,
+        KC_SLASH  , KC_7      , KC_8      , KC_9      , KC_MINUS  ,
         KC_PERC   , KC_POUND  , KC_DOLLAR , KC_COMMA  , KC_DOT    ,
         LSFT_ESC  , LCMD_BSPC ,
         KC_NO     , KC_NO
     ),
     // Media & Function Keys
     [3] = LAYOUT_split_3x5_2(
-        QK_BOOT   , KC_NO     , KC_BRID   , KC_BRIU   , LOCK_SCRN ,
-        CAPT_AREA , KC_F1     , KC_F2     , KC_F3     , KC_F4     ,
-        KC_APP    , KC_MUTE   , KC_VOLD   , KC_VOLU   , KC_MCTL   ,
-        CAPT_WNDW , RSFT_F5   , RCMD_F6   , ROPT_F7   , RCTL_F8   ,
-        DB_TOGG   , MDIA_PREV , MDIA_PLAY , MDIA_NEXT , KC_NO     ,
-        CAPT_SCRN , KC_F9     , KC_F10    , KC_F11    , KC_F12    ,
+        QK_BOOT   , LOCK_SCRN , KC_BRID   , KC_BRIU   , LCMD(KC_X) ,
+        CAPT_AREA , KC_F1     , KC_F2     , KC_F3     , KC_F4      ,
+        KC_MCTL   , KC_MUTE   , KC_VOLD   , KC_VOLU   , LCMD(KC_C) ,
+        CAPT_WNDW , RSFT_F5   , RCMD_F6   , ROPT_F7   , RCTL_F8    ,
+        DB_TOGG   , MDIA_PLAY , MDIA_PREV , MDIA_NEXT , LCMD(KC_V) ,
+        CAPT_SCRN , KC_F9     , KC_F10    , KC_F11    , KC_F12     ,
         KC_LSFT   , KC_DICT   ,
         KC_NO     , KC_NO
     )
@@ -77,7 +77,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-// https://docs.qmk.fm/tap_hold#flow-tap
+// https://docs.qmk.fm/tap_hold#is-flow-tap-key
 bool is_flow_tap_key(uint16_t keycode) {
     if (get_mods()) return false;
 
@@ -94,32 +94,25 @@ bool is_flow_tap_key(uint16_t keycode) {
     return false;
 }
 
+// https://docs.qmk.fm/tap_hold#get-flow-tap-term
 uint16_t get_flow_tap_term(uint16_t curr_keycode, keyrecord_t* record, uint16_t prev_keycode) {
     if (!is_flow_tap_key(curr_keycode)) return 0;
     if (!is_flow_tap_key(prev_keycode)) return 0;
 
-    bool is_curr_space = curr_keycode == LAY2_SPC;
-    bool is_prev_space = prev_keycode == LAY2_SPC;
+    uint16_t curr_tapcode = get_tap_keycode(curr_keycode);
+    uint16_t prev_tapcode = get_tap_keycode(prev_keycode);
+
+    bool is_curr_space = curr_tapcode == KC_SPACE;
+    bool is_prev_space = prev_tapcode == KC_SPACE;
 
     if (is_curr_space && is_prev_space) return 0;
 
-    return 150;
-
-    // switch (curr_keycode) {
-    //     case LCTL_KC_N:
-    //     case LOPT_KC_R:
-    //     case ROPT_KC_E:
-    //     case RCTL_KC_I:
-    //         return 175;
-    //     case LCMD_KC_T:
-    //     case LSFT_KC_S:
-    //     case RSFT_KC_H:
-    //     case RCMD_KC_A:
-    //     case LAY2_SPC:
-    //         return 125;
-    //     default:
-    //         return 150;
-    // }
+    switch (curr_tapcode) {
+        case KC_SPACE:
+            return 100;
+        default:
+            return 150;
+    }
 }
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
@@ -127,8 +120,13 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
         case LSFT_OSM:
         case LSFT_ESC:
             return 250;
-        default:
+        case LCTL_KC_N:
+        case LOPT_KC_R:
+        case ROPT_KC_E:
+        case RCTL_KC_I:
             return 200;
+        default:
+            return 150;
     }
 }
 
