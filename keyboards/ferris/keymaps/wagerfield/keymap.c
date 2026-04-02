@@ -1,4 +1,6 @@
+// cspell: disable
 // clang-format off
+#include "keycodes.h"
 #include QMK_KEYBOARD_H
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -32,7 +34,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         LCTL_KC_0 , LOPT_KC_4 , LCMD_KC_5 , LSFT_KC_6 , HYPR_EQL  ,
         KC_LEFT   , KC_DOWN   , KC_UP     , KC_RIGHT  , KC_COLON  ,
         KC_SLASH  , KC_7      , KC_8      , KC_9      , KC_MINUS  ,
-        KC_PERC   , KC_POUND  , KC_DOLLAR , KC_COMMA  , KC_DOT    ,
+        KC_SPC    , KC_POUND  , KC_DOLLAR , KC_COMMA  , KC_DOT    ,
         LSFT_ESC  , LCMD_BSPC ,
         KC_NO     , KC_NO
     ),
@@ -49,29 +51,38 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     )
 };
 
-static bool tap(uint16_t keycode) {
-    tap_code16(keycode);
-    return false;
-}
+static uint16_t shifted_keycode = KC_NO;
 
+// https://docs.qmk.fm/custom_quantum_functions#example-process-record-user-implementation
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (!record->event.pressed) return true;
+    if (record->event.pressed) {
+        switch (keycode) {
 
-    switch (keycode) {
-        case CAPT_WNDW:
+            // Capture window (CMD+SFT+4 -> SPC)
+            case CAPT_WNDW:
             SEND_STRING(SS_LCMD(SS_LSFT("4")) SS_DELAY(100) SS_TAP(X_SPACE));
             return false;
-    }
 
-    if (!record->tap.count) return true;
+            // Map mod-tap shifted keycodes
+            case LOPT_EXLM: shifted_keycode = KC_EXLM; break; // !
+            case LSFT_LABK: shifted_keycode = KC_LABK; break; // <
+            case HYPR_PIPE: shifted_keycode = KC_PIPE; break; // |
+            case RSFT_LPRN: shifted_keycode = KC_LPRN; break; // (
+            case RCMD_LCBR: shifted_keycode = KC_LCBR; break; // {
+            case RCTL_COLN: shifted_keycode = KC_COLN; break; // :
 
-    switch (keycode) {
-        case LOPT_EXLM: return tap(KC_EXLM); // !
-        case LSFT_LABK: return tap(KC_LABK); // <
-        case HYPR_PIPE: return tap(KC_PIPE); // |
-        case RSFT_LPRN: return tap(KC_LPRN); // (
-        case RCMD_LCBR: return tap(KC_LCBR); // {
-        case RCTL_COLN: return tap(KC_COLN); // :
+            default: return true;
+        }
+
+        // Register mod-tap shifted keycodes
+        register_code16(shifted_keycode);
+        return false;
+
+    } else if (shifted_keycode != KC_NO) {
+
+        // Unregister mod-tap shifted keycodes
+        unregister_code16(shifted_keycode);
+        shifted_keycode = KC_NO;
     }
 
     return true;

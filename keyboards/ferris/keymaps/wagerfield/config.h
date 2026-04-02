@@ -1,3 +1,4 @@
+// cspell: disable
 // clang-format off
 // #include "quantum_keycodes.h"
 #define RP2040_FLASH_GD25Q64CS
@@ -8,7 +9,7 @@
 #define TAPPING_TERM_PER_KEY
 #define TAPPING_TERM 200
 #define FLOW_TAP_TERM 150
-#define QUICK_TAP_TERM 0
+#define QUICK_TAP_TERM 150
 #define PERMISSIVE_HOLD_PER_KEY
 
 // Caps Word
