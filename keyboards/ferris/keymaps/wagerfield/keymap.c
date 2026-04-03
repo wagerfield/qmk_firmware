@@ -51,36 +51,48 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     )
 };
 
+// Track the currently active shifted keycode for mod-tap keys
 static uint16_t shifted_keycode = KC_NO;
+
+// Map mod-tap keycodes to their shifted counterparts
+uint16_t get_shifted_keycode(uint16_t keycode) {
+    switch (keycode) {
+        case LOPT_EXLM: return KC_EXLM; // !
+        case LSFT_LABK: return KC_LABK; // <
+        case HYPR_PIPE: return KC_PIPE; // |
+        case RSFT_LPRN: return KC_LPRN; // (
+        case RCMD_LCBR: return KC_LCBR; // {
+        case RCTL_COLN: return KC_COLN; // :
+        default: return KC_NO; // 0 (no-op)
+    }
+}
 
 // https://docs.qmk.fm/custom_quantum_functions#example-process-record-user-implementation
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+
+    // Capture window (CMD+SFT+4 -> SPC)
+    if (keycode == CAPT_WNDW && record->event.pressed) {
+        SEND_STRING(SS_LCMD(SS_LSFT("4")) SS_DELAY(100) SS_TAP(X_SPACE));
+        return false;
+    }
+
+    // Get shifted keycode if this is a mod-tap key
+    uint16_t shifted = get_shifted_keycode(keycode);
+    if (shifted == KC_NO) return true;
+
+    // Press mod-tap shifted key
     if (record->event.pressed) {
-        switch (keycode) {
-
-            // Capture window (CMD+SFT+4 -> SPC)
-            case CAPT_WNDW:
-            SEND_STRING(SS_LCMD(SS_LSFT("4")) SS_DELAY(100) SS_TAP(X_SPACE));
+        if (record->tap.count) {
+            shifted_keycode = shifted;
+            register_code16(shifted_keycode);
             return false;
-
-            // Map mod-tap shifted keycodes
-            case LOPT_EXLM: shifted_keycode = KC_EXLM; break; // !
-            case LSFT_LABK: shifted_keycode = KC_LABK; break; // <
-            case HYPR_PIPE: shifted_keycode = KC_PIPE; break; // |
-            case RSFT_LPRN: shifted_keycode = KC_LPRN; break; // (
-            case RCMD_LCBR: shifted_keycode = KC_LCBR; break; // {
-            case RCTL_COLN: shifted_keycode = KC_COLN; break; // :
-
-            default: return true;
         }
 
-        // Register mod-tap shifted keycodes
-        register_code16(shifted_keycode);
-        return false;
+        // Held as modifier - untrack for release
+        shifted_keycode = KC_NO;
 
+    // Release mod-tap shifted key
     } else if (shifted_keycode != KC_NO) {
-
-        // Unregister mod-tap shifted keycodes
         unregister_code16(shifted_keycode);
         shifted_keycode = KC_NO;
     }
@@ -106,17 +118,21 @@ bool is_flow_tap_key(uint16_t keycode) {
 }
 
 // https://docs.qmk.fm/tap_hold#get-flow-tap-term
-uint16_t get_flow_tap_term(uint16_t curr_keycode, keyrecord_t* record, uint16_t prev_keycode) {
+uint16_t get_flow_tap_term(uint16_t curr_keycode, keyrecord_t *record, uint16_t prev_keycode) {
     if (!is_flow_tap_key(curr_keycode)) return 0;
     if (!is_flow_tap_key(prev_keycode)) return 0;
 
     uint16_t curr_tapcode = get_tap_keycode(curr_keycode);
     uint16_t prev_tapcode = get_tap_keycode(prev_keycode);
 
-    bool is_curr_space = curr_tapcode == KC_SPACE;
-    bool is_prev_space = prev_tapcode == KC_SPACE;
-
-    if (is_curr_space && is_prev_space) return 0;
+    if (prev_tapcode == KC_SPACE) {
+        switch (curr_tapcode) {
+            case KC_S: // Shift
+            case KC_H: // Shift
+            case KC_SPACE:
+                return 0;
+        }
+    }
 
     switch (curr_tapcode) {
         case KC_SPACE:
