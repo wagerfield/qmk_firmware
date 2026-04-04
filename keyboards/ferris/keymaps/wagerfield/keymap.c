@@ -70,8 +70,8 @@ uint16_t get_shifted_keycode(uint16_t keycode) {
 // https://docs.qmk.fm/custom_quantum_functions#example-process-record-user-implementation
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
-    // Capture window (CMD+SFT+4 -> SPC)
-    if (keycode == CAPT_WNDW && record->event.pressed) {
+    // Press: Capture window (CMD+SFT+4 -> SPC)
+    if (record->event.pressed && keycode == CAPT_WNDW) {
         SEND_STRING(SS_LCMD(SS_LSFT("4")) SS_DELAY(100) SS_TAP(X_SPACE));
         return false;
     }
@@ -80,19 +80,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     uint16_t shifted = get_shifted_keycode(keycode);
     if (shifted == KC_NO) return true;
 
-    // Press mod-tap shifted key
-    if (record->event.pressed) {
-        if (record->tap.count) {
-            shifted_keycode = shifted;
-            register_code16(shifted_keycode);
-            return false;
-        }
+    // Press: Register shifted keycode on tap
+    if (record->event.pressed && record->tap.count) {
+        shifted_keycode = shifted;
+        register_code16(shifted_keycode);
+        return false;
+    }
 
-        // Held as modifier - untrack for release
-        shifted_keycode = KC_NO;
-
-    // Release mod-tap shifted key
-    } else if (shifted_keycode != KC_NO) {
+    // Release: Unregister shifted keycode
+    if (!record->event.pressed && shifted_keycode != KC_NO) {
         unregister_code16(shifted_keycode);
         shifted_keycode = KC_NO;
     }
